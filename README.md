@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:3000.
+(https://xyz-speakers.vercel.app/)
 
 > This project was generated in a sandboxed environment with no network
 > access, so `npm install` / `npm run build` have not been executed here —
