@@ -1,11 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useScroll } from "framer-motion";
+import { useScroll, useTransform, motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
 import Button from "@/components/Button";
 import GlassCard from "@/components/GlassCard";
 import ScrollCanvas from "@/components/ScrollCanvas";
@@ -13,11 +12,10 @@ import StoryBeat from "@/components/StoryBeat";
 import Footer from "@/components/Footer";
 
 // Scroll-progress breakpoints for each story beat
-const HERO_RANGE: [number, number] = [0, 0.15];
-const ENGINEERING_RANGE: [number, number] = [0.15, 0.4];
-const POWER_RANGE: [number, number] = [0.4, 0.65];
-const SOUND_RANGE: [number, number] = [0.65, 0.85];
-const REASSEMBLY_RANGE: [number, number] = [0.85, 1];
+const ENGINEERING_RANGE: [number, number] = [0.18, 0.38];
+const POWER_RANGE: [number, number] = [0.38, 0.60];
+const SOUND_RANGE: [number, number] = [0.60, 0.82];
+const REASSEMBLY_RANGE: [number, number] = [0.82, 1.0];
 
 export default function Home() {
   const sequenceRef = useRef<HTMLDivElement>(null);
@@ -28,6 +26,15 @@ export default function Home() {
     target: sequenceRef,
     offset: ["start start", "end end"],
   });
+
+  // Hero dissolves smoothly as user begins scrolling down into the sequence
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.10, 0.16], [1, 1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.10, 0.16], [0, 0, -28]);
+  const heroPointerEvents = useTransform(heroOpacity, (v) => (v > 0.1 ? "auto" : "none"));
+
+  // Floating feature cards fade as the 3D disassembly begins
+  const cardsOpacity = useTransform(scrollYProgress, [0, 0.08, 0.14], [1, 1, 0]);
+  const cardsY = useTransform(scrollYProgress, [0, 0.08, 0.14], [0, 0, -20]);
 
   const faqs = [
     {
@@ -52,50 +59,137 @@ export default function Home() {
     <main className="relative bg-black text-white selection:bg-white selection:text-black">
       <Navbar />
 
-      {/* Cinematic Dark Hero matching reference screenshot */}
-      <Hero />
-
-      {/* Interactive 300-Frame Scrollytelling Sequence */}
+      {/* PINNED SCROLLYTELLING CONTAINER
+          The viewport stays 100% pinned (sticky top-0 h-screen).
+          Scrolling scrubs through the 300-frame speaker animation in-place without moving the page up. */}
       <section
-        id="experience"
+        id="overview"
         ref={sequenceRef}
-        className="relative h-[250vh] md:h-[400vh] border-t border-white/20"
+        className="relative h-[250vh] md:h-[450vh] bg-black"
+        aria-label="XYZ Aura One Cinematic Scrollytelling"
       >
         <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
+          {/* Subtle ambient lighting & grid */}
           <div className="bg-grid pointer-events-none absolute inset-0 opacity-30" />
+          <div
+            className="pointer-events-none absolute right-[10%] top-[40%] -translate-y-1/2 h-[500px] w-[500px] rounded-full opacity-20 blur-[140px]"
+            style={{
+              background: "radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%)",
+            }}
+          />
 
-          <div className="absolute inset-0">
+          {/* 300-Frame Exploded Canvas: Plays directly in-place as user scrolls */}
+          <div className="absolute inset-0 z-0">
             <ScrollCanvas scrollYProgress={scrollYProgress} />
           </div>
 
-          <StoryBeat
-            scrollYProgress={scrollYProgress}
-            range={HERO_RANGE}
-            align="center"
-            headline="XYZ Aura One"
-            gradientHeadline
-            body={
-              <>
-                <p className="text-xl text-white/90">Sound, perfected.</p>
-                <p className="text-[#8a8a8a]">
-                  Flagship acoustic engineering, re-engineered for a world that never stops.
-                </p>
-              </>
-            }
-          />
+          {/* INITIAL HERO OVERLAY: Visible at scroll = 0, dissolves as user scrolls into sequence */}
+          <motion.div
+            style={{
+              opacity: heroOpacity,
+              y: heroY,
+              pointerEvents: heroPointerEvents,
+            }}
+            className="absolute inset-0 z-10 flex flex-col justify-center px-6 sm:px-10 lg:px-16"
+          >
+            <div className="mx-auto w-full max-w-[1280px]">
+              <div className="grid items-center gap-8 lg:grid-cols-12">
+                {/* Left Column: Bold Headline & CTAs */}
+                <div className="lg:col-span-6 space-y-6 pt-16 lg:pt-0">
+                  <div>
+                    <h1 className="hero-headline text-white tracking-tight">
+                      <span className="block text-white">Sound, perfected.</span>
+                      <span className="block text-[#8a8a8a]">Feel nothing else.</span>
+                    </h1>
+                  </div>
 
+                  <p className="max-w-[540px] text-base leading-[1.6] text-[#8a8a8a] sm:text-lg">
+                    Flagship acoustic engineering, re-engineered for a world that never stops.
+                    Precision dual force-canceling radiators and a custom neodymium transducer
+                    deliver studio-master fidelity anywhere you listen.
+                  </p>
+
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center pt-2">
+                    <Button href="/order" variant="primary" size="lg">
+                      Pre-order Now — $299
+                    </Button>
+                    <Button href="#sound" variant="secondary" size="lg">
+                      Explore Sound
+                    </Button>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-xs font-mono text-[#8a8a8a] pt-2">
+                    <span>30-Day Acoustic Home Trial</span>
+                    <span className="text-white/20">•</span>
+                    <span>2-Year Warranty</span>
+                    <span className="text-white/20 hidden sm:inline">•</span>
+                    <span className="text-white/40 hidden sm:inline">↓ Scroll to explore inside</span>
+                  </div>
+                </div>
+
+                {/* Right Column: Spacer on desktop leaving room for the centered speaker canvas */}
+                <div className="hidden lg:col-span-6 lg:block h-[480px]" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* THREE FLOATING GLASS CARDS: Positioned around the speaker, dissolve on initial scroll */}
+          <motion.div
+            style={{
+              opacity: cardsOpacity,
+              y: cardsY,
+              pointerEvents: heroPointerEvents,
+            }}
+            className="pointer-events-none absolute inset-0 z-20 hidden lg:block"
+          >
+            {/* Card 1: Top-Right of Speaker */}
+            <div className="absolute right-12 xl:right-28 top-28 pointer-events-auto">
+              <GlassCard
+                title="38 Hz Sub-Bass"
+                description="Dual opposing force-canceling radiators eliminate cabinet vibration."
+                tag="Acoustic Low-End"
+                floatAnimation="a"
+                className="shadow-glass"
+              />
+            </div>
+
+            {/* Card 2: Mid-Right of Speaker */}
+            <div className="absolute right-8 xl:right-16 top-1/2 -translate-y-1/2 pointer-events-auto">
+              <GlassCard
+                title="32-Bit Floating DSP"
+                description="100,000 real-time acoustic adjustments per second."
+                tag="Dynamic EQ"
+                floatAnimation="b"
+                className="shadow-glass"
+              />
+            </div>
+
+            {/* Card 3: Bottom-Right of Speaker */}
+            <div className="absolute right-16 xl:right-32 bottom-20 pointer-events-auto">
+              <GlassCard
+                title="24-Hour Battery"
+                description="5200 mAh fast-charging power cell for all-day studio playback."
+                tag="Endurance"
+                floatAnimation="c"
+                className="shadow-glass"
+              />
+            </div>
+          </motion.div>
+
+          {/* STORY BEATS: Sequenced as the user scrolls through the 300-frame explosion */}
           <StoryBeat
             scrollYProgress={scrollYProgress}
             range={ENGINEERING_RANGE}
             align="left"
+            eyebrow="Stage 01 • Transducer Core"
             headline="Precision-engineered for sound."
             body={
               <>
                 <p>
-                  Custom drivers, a rigid enclosure, and optimized internal airflow deliver studio-grade clarity.
+                  Custom 48mm aluminum-magnesium drivers, a rigid enclosure, and optimized internal airflow deliver uncompressed studio clarity.
                 </p>
                 <p>
-                  Every component is tuned for balance, power, and output — hour after hour.
+                  Every component is tuned for acoustic balance, dynamic scale, and ultra-low distortion hour after hour.
                 </p>
               </>
             }
@@ -105,12 +199,13 @@ export default function Home() {
             scrollYProgress={scrollYProgress}
             range={POWER_RANGE}
             align="right"
+            eyebrow="Stage 02 • Bi-Amplification"
             headline="Power, redefined."
             body={
               <>
-                <p>High-capacity battery delivers all-day playback.</p>
-                <p>Onboard amplification adapts output in real time.</p>
-                <p>Seamless wireless connectivity keeps every device in sync.</p>
+                <p>5200 mAh high-discharge dual-cell battery delivers up to 24 hours of playback.</p>
+                <p>Closed-loop Class-D bi-amplification continuously adapts output in real time.</p>
+                <p>Fast-charging protocol powers 80% battery capacity in just 42 minutes.</p>
               </>
             }
           />
@@ -119,14 +214,15 @@ export default function Home() {
             scrollYProgress={scrollYProgress}
             range={SOUND_RANGE}
             align="left"
+            eyebrow="Stage 03 • Acoustic Dispersion"
             headline="Immersive, room-filling sound."
             body={
               <>
                 <p>
-                  High-performance drivers unlock detail, depth, and texture in every track.
+                  Dual opposing passive radiators unlock subterranean depth down to 38 Hz without cabinet walking.
                 </p>
                 <p>
-                  Advanced acoustic tuning restores clarity to compressed audio, so every note feels alive.
+                  High-resolution 24-bit/96kHz LDAC and aptX Adaptive decoding preserve every subtle texture.
                 </p>
               </>
             }
@@ -136,34 +232,23 @@ export default function Home() {
             scrollYProgress={scrollYProgress}
             range={REASSEMBLY_RANGE}
             align="center"
+            eyebrow="Stage 04 • Reassembled Fidelity"
             headline="Hear everything. Feel nothing else."
             gradientHeadline
             body={
-              <>
-                <p className="text-lg text-white/80">
-                  XYZ. Designed for sound, crafted for anywhere.
+              <div className="space-y-4">
+                <p className="text-base text-white/90">
+                  XYZ Aura One. Designed for sound, crafted for anywhere.
                 </p>
-                <div className="flex flex-col items-center gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                   <Button href="/order" variant="primary" size="md">
                     Pre-order Aura One — $299
                   </Button>
-                  <div className="flex items-center gap-4 text-xs">
-                    <Link
-                      href="/technology"
-                      className="pointer-events-auto text-[#8a8a8a] hover:text-white transition-colors"
-                    >
-                      Explore Technology →
-                    </Link>
-                    <span className="text-white/20">•</span>
-                    <Link
-                      href="/specs"
-                      className="pointer-events-auto text-[#8a8a8a] hover:text-white transition-colors"
-                    >
-                      Technical Specs →
-                    </Link>
-                  </div>
+                  <Button href="/specs" variant="secondary" size="md">
+                    Technical Specs →
+                  </Button>
                 </div>
-              </>
+              </div>
             }
           />
         </div>
@@ -491,10 +576,10 @@ export default function Home() {
                   <select
                     className="w-full bg-black/60 border border-white/20 px-4 py-3 text-sm text-white focus:border-white focus:outline-none rounded-none"
                   >
-                    <option value="acoustic">Acoustic Performance & Architecture</option>
-                    <option value="order">Pre-order & Worldwide Priority Shipping</option>
+                    <option value="acoustic">Acoustic Performance &amp; Architecture</option>
+                    <option value="order">Pre-order &amp; Worldwide Priority Shipping</option>
                     <option value="tws">Stereo TWS Multi-Unit Staging</option>
-                    <option value="warranty">Warranty & In-Home Trial Policy</option>
+                    <option value="warranty">Warranty &amp; In-Home Trial Policy</option>
                   </select>
                 </div>
 

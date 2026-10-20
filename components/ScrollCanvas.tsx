@@ -89,14 +89,14 @@ export default function ScrollCanvas({ scrollYProgress }: ScrollCanvasProps) {
   return (
     <div className="relative h-full w-full bg-bg-primary">
       {!isLoaded && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-bg-primary">
-          <div className="h-px w-40 overflow-hidden bg-white/10">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-black">
+          <div className="h-px w-40 overflow-hidden bg-white/20">
             <div
-              className="h-full bg-cta-gradient transition-[width] duration-150 ease-out"
+              className="h-full bg-white transition-[width] duration-150 ease-out"
               style={{ width: `${Math.round(loadProgress * 100)}%` }}
             />
           </div>
-          <p className="text-xs tracking-wide text-white/40">
+          <p className="text-xs font-mono tracking-wide text-[#8a8a8a]">
             Loading {Math.round(loadProgress * 100)}%
           </p>
         </div>
