@@ -1,3 +1,5 @@
+"use client";
+
 import { GlassFold } from "@/components/ui/glass-fold"
 
 // the adjustable settings 21st shows next to the preview
@@ -16,8 +18,8 @@ export default function GlassFoldDemo(props: Partial<typeof settings>) {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
       <GlassFold {...config} className="absolute inset-0" />
-      <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-6 p-10 text-white">
-        <div>
+      <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-6 p-10 text-white pointer-events-none">
+        <div className="pointer-events-auto">
           <h1 className="text-4xl font-medium tracking-tight">Glass fold</h1>
           <p className="mt-2 max-w-sm text-sm text-white/60">
             One of twenty WebGL shaders from GradFlow. Three colors, no dependencies.
@@ -27,7 +29,7 @@ export default function GlassFoldDemo(props: Partial<typeof settings>) {
           href="https://gradflow.meerbahadin.dev"
           target="_blank"
           rel="noreferrer"
-          className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur-md transition-colors hover:bg-white/20"
+          className="pointer-events-auto rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur-md transition-colors hover:bg-white/20"
         >
           gradflow.meerbahadin.dev ↗
         </a>

@@ -15,6 +15,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Features", href: "/#sound" },
   { label: "Technology", href: "/technology" },
   { label: "Specs", href: "/specs" },
+  { label: "Shader Demo", href: "/demo/glass-fold" },
   { label: "FAQs", href: "/#faqs" },
   { label: "Contact", href: "/#contact" },
 ];

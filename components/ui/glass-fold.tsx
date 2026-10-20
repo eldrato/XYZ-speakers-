@@ -30,7 +30,11 @@ const VERTEX = `
 `
 
 const FRAGMENT = `
-  precision highp float;
+  #ifdef GL_FRAGMENT_PRECISION_HIGH
+    precision highp float;
+  #else
+    precision mediump float;
+  #endif
 
   uniform float u_time;
   uniform vec3 u_color1;
@@ -84,7 +88,9 @@ const FRAGMENT = `
       float fresnel = exp(-back * 8.0);
       // the lit edge, and a fainter line just inside it for the glass's thickness
       float rim = exp(-back * 80.0);
-      float inner = exp(-pow((back - 0.045) / 0.014, 2.0));
+      // Use square instead of pow(x, 2.0) to prevent undefined NaN when negative
+      float innerDist = (back - 0.045) / 0.014;
+      float inner = exp(-(innerDist * innerDist));
       float bloom = exp(-abs(s) * 20.0);
 
       vec3 tint = mix(u_color1, u_color3, clamp(fresnel * 0.6 + 0.08 + 0.14 * sin(fi * 2.1 + q.x * 0.8 + t * 0.2), 0.0, 1.0));
@@ -108,24 +114,30 @@ const FRAGMENT = `
   }
 `
 
-function hexToVec3(hex: string): [number, number, number] {
-  const h = hex.replace("#", "")
-  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h
-  const n = parseInt(full, 16)
+function hexToVec3(hex?: string): [number, number, number] {
+  const safeHex = (hex || "#000000").replace("#", "")
+  const full = safeHex.length === 3 ? safeHex.split("").map((c) => c + c).join("") : safeHex
+  const n = parseInt(full, 16) || 0
   return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
 }
 
-function compile(gl: WebGLRenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type)!
+function compile(gl: WebGLRenderingContext, type: number, source: string): WebGLShader | null {
+  const shader = gl.createShader(type)
+  if (!shader) return null
   gl.shaderSource(shader, source)
   gl.compileShader(shader)
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error("Shader compile error:", gl.getShaderInfoLog(shader))
+    gl.deleteShader(shader)
+    return null
+  }
   return shader
 }
 
 export function GlassFold({
-  color1 = "#000000",
-  color2 = "#000000",
-  color3 = "#9f9f9f",
+  color1 = "#1e3cc8",
+  color2 = "#06081e",
+  color3 = "#96d7ff",
   speed = 0.55,
   scale = 1,
   noise = 0.10,
@@ -140,13 +152,29 @@ export function GlassFold({
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const gl = canvas.getContext("webgl", { antialias: false, alpha: false })
-    if (!gl) return
+    const gl = (canvas.getContext("webgl", { antialias: false, alpha: false }) ||
+      canvas.getContext("experimental-webgl", { antialias: false, alpha: false })) as WebGLRenderingContext | null
+    if (!gl) {
+      console.warn("WebGL not supported on this context")
+      return
+    }
 
-    const program = gl.createProgram()!
-    gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERTEX))
-    gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAGMENT))
+    const vert = compile(gl, gl.VERTEX_SHADER, VERTEX)
+    const frag = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT)
+    if (!vert || !frag) return
+
+    const program = gl.createProgram()
+    if (!program) return
+
+    gl.attachShader(program, vert)
+    gl.attachShader(program, frag)
     gl.linkProgram(program)
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error("WebGL program link error:", gl.getProgramInfoLog(program))
+      return
+    }
+
     gl.useProgram(program)
 
     const buffer = gl.createBuffer()
