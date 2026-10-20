@@ -1,66 +1,110 @@
+"use client";
+
 import Link from "next/link";
+import Button from "@/components/Button";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[#050507] py-16 text-white/60">
-      <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2 space-y-3">
+    <footer className="border-t border-white/20 bg-black py-16 text-[#8a8a8a]">
+      <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
+        <div className="grid gap-12 lg:grid-cols-12">
+          {/* Brand & Mission */}
+          <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-2">
-              <span className="text-base font-bold tracking-tight text-white">
-                XYZ <span className="text-accent-secondary">·</span> Aura One
+              <span className="text-xl font-light tracking-[0.25em] text-white">
+                XYZ
+              </span>
+              <span className="text-xs uppercase tracking-widest text-[#8a8a8a]">
+                Aura One
               </span>
             </div>
-            <p className="max-w-md text-xs leading-relaxed text-white/50">
-              Precision acoustic architecture, dual force-canceling passive radiators,
-              and 32-bit floating point dynamic DSP. Designed for pure sound, crafted for anywhere.
+            <p className="max-w-sm text-sm leading-relaxed text-[#8a8a8a]">
+              Flagship acoustic engineering, dual opposing force-canceling radiators,
+              and 32-bit floating DSP. Sound perfected for purists, built for anywhere.
             </p>
-            <div className="flex items-center gap-4 pt-2 text-xs text-white/40">
-              <span>© {new Date().getFullYear()} XYZ Acoustics Inc.</span>
-              <span>•</span>
-              <span>All rights reserved.</span>
+            <div className="pt-2 text-xs font-mono text-[#8a8a8a]">
+              © {new Date().getFullYear()} XYZ Acoustics Inc. All rights reserved.
             </div>
           </div>
 
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
+          {/* Navigation Links */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-white">
               Navigation
             </h4>
-            <ul className="mt-3 space-y-2 text-xs">
+            <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/" className="hover:text-white transition-colors">
-                  Overview & Experience
+                  Overview
+                </Link>
+              </li>
+              <li>
+                <Link href="/#sound" className="hover:text-white transition-colors">
+                  Acoustic Sound
                 </Link>
               </li>
               <li>
                 <Link href="/technology" className="hover:text-white transition-colors">
-                  Internal Architecture & Tech
+                  Technology & Assembly
                 </Link>
               </li>
               <li>
                 <Link href="/specs" className="hover:text-white transition-colors">
-                  Full Technical Specifications
+                  Technical Specs
                 </Link>
               </li>
               <li>
-                <Link href="/order" className="hover:text-white transition-colors">
-                  Pre-order — From $299
+                <Link href="/#faqs" className="hover:text-white transition-colors">
+                  Frequently Asked Questions
+                </Link>
+              </li>
+              <li>
+                <Link href="/#contact" className="hover:text-white transition-colors">
+                  Contact Support
                 </Link>
               </li>
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
-              Engineering Specs
+          {/* Reference Specs */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-white">
+              Acoustic Benchmarks
             </h4>
-            <ul className="mt-3 space-y-2 text-xs text-white/50">
-              <li>38 Hz – 22,000 Hz Response</li>
-              <li>92 dB Peak SPL Output</li>
-              <li>Dual Class-D 45W RMS Bi-Amp</li>
-              <li>IP67 Waterproof & Dustproof</li>
-              <li>24-Hour Li-ion Fast Charge</li>
+            <ul className="space-y-2 text-xs font-mono text-[#8a8a8a]">
+              <li>38 Hz – 22 kHz (±3 dB)</li>
+              <li>92 dB Peak SPL @ 1m</li>
+              <li>45W RMS Class-D Bi-Amp</li>
+              <li>IP67 Waterproof Chassis</li>
+              <li>24-Hour Battery Life</li>
             </ul>
+          </div>
+
+          {/* Acoustic Newsletter */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-white">
+              Private Release List
+            </h4>
+            <p className="text-xs text-[#8a8a8a]">
+              Get private firmware updates, engineering teardowns, and priority batch notifications.
+            </p>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert("Thank you. You are on the XYZ priority list.");
+              }}
+              className="flex flex-col gap-2 pt-1"
+            >
+              <input
+                type="email"
+                placeholder="your.email@domain.com"
+                required
+                className="w-full bg-[#0a0a0a] border border-white/20 px-3 py-2 text-xs text-white placeholder-[#8a8a8a] focus:border-white focus:outline-none rounded-none"
+              />
+              <Button type="submit" variant="primary" size="sm" fullWidth>
+                Join Priority List
+              </Button>
+            </form>
           </div>
         </div>
       </div>
