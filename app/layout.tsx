@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import SiteGlassFoldBackground from "@/components/SiteGlassFoldBackground";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,8 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-        {children}
+      <body className="bg-black text-white font-sans antialiased selection:bg-white selection:text-black min-h-screen">
+        <SiteGlassFoldBackground />
+        <div className="relative z-10">
+          {children}
+        </div>
       </body>
     </html>
   );

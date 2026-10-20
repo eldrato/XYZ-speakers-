@@ -110,7 +110,7 @@ export default function ScrollCanvas({ scrollYProgress }: ScrollCanvasProps) {
   }, [isLoaded, hasFailed]);
 
   return (
-    <div className="relative h-full w-full bg-black">
+    <div className="relative h-full w-full bg-transparent">
       {hasFailed ? (
         <ExplodedFallback scrollYProgress={scrollYProgress} />
       ) : (

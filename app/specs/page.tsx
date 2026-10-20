@@ -260,7 +260,7 @@ export default function SpecsPage() {
   })).filter((cat) => cat.items.length > 0);
 
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+    <main className="min-h-screen bg-transparent text-white selection:bg-white selection:text-black">
       <Navbar />
 
       {/* Hero Header */}

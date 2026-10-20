@@ -175,7 +175,7 @@ export default function OrderPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+    <main className="min-h-screen bg-transparent text-white selection:bg-white selection:text-black">
       <Navbar />
 
       <div className="relative pt-24 pb-20 md:pt-32">

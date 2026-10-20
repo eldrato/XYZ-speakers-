@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/20 bg-black py-16 text-[#8a8a8a]">
+    <footer className="border-t border-white/20 bg-black/80 backdrop-blur-md py-16 text-[#8a8a8a]">
       <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Brand & Mission */}

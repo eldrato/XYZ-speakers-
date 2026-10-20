@@ -56,7 +56,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative bg-black text-white selection:bg-white selection:text-black">
+    <main className="relative bg-transparent text-white selection:bg-white selection:text-black">
       <Navbar />
 
       {/* PINNED SCROLLYTELLING CONTAINER
@@ -65,10 +65,10 @@ export default function Home() {
       <section
         id="overview"
         ref={sequenceRef}
-        className="relative h-[250vh] md:h-[450vh] bg-black"
+        className="relative h-[250vh] md:h-[450vh] bg-transparent"
         aria-label="XYZ Aura One Cinematic Scrollytelling"
       >
-        <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
+        <div className="sticky top-0 h-screen w-full overflow-hidden bg-transparent">
           {/* Subtle ambient lighting & grid */}
           <div className="bg-grid pointer-events-none absolute inset-0 opacity-30" />
           <div
@@ -255,7 +255,7 @@ export default function Home() {
       </section>
 
       {/* Features & Acoustic Sound Section (#sound) */}
-      <section id="sound" className="relative border-t border-white/20 bg-black py-24 md:py-32">
+      <section id="sound" className="relative border-t border-white/20 bg-black/40 backdrop-blur-sm py-24 md:py-32">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
           <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
             
@@ -328,7 +328,7 @@ export default function Home() {
       </section>
 
       {/* Internal Architecture Teaser (#technology) */}
-      <section id="technology" className="relative border-t border-white/20 bg-[#0a0a0a] py-24 md:py-32">
+      <section id="technology" className="relative border-t border-white/20 bg-black/50 backdrop-blur-sm py-24 md:py-32">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-12">
             <div className="max-w-2xl space-y-2">
@@ -389,7 +389,7 @@ export default function Home() {
       </section>
 
       {/* Specifications Teaser (#specs) */}
-      <section id="specs" className="relative border-t border-white/20 bg-black py-24 md:py-32">
+      <section id="specs" className="relative border-t border-white/20 bg-black/40 backdrop-blur-sm py-24 md:py-32">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-12">
             <div className="max-w-2xl space-y-2">
@@ -471,7 +471,7 @@ export default function Home() {
       </section>
 
       {/* Frequently Asked Questions (#faqs) */}
-      <section id="faqs" className="relative border-t border-white/20 bg-[#0a0a0a] py-24 md:py-32">
+      <section id="faqs" className="relative border-t border-white/20 bg-black/50 backdrop-blur-sm py-24 md:py-32">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
           <div className="max-w-2xl space-y-3 mb-12">
             <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#8a8a8a]">
@@ -515,7 +515,7 @@ export default function Home() {
       </section>
 
       {/* Contact & Support Section (#contact) */}
-      <section id="contact" className="relative border-t border-white/20 bg-black py-24 md:py-32">
+      <section id="contact" className="relative border-t border-white/20 bg-black/60 backdrop-blur-sm py-24 md:py-32">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
           <div className="grid gap-12 lg:grid-cols-12">
             <div className="lg:col-span-5 space-y-4">

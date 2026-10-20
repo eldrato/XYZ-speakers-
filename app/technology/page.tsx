@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function TechnologyPage() {
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+    <main className="min-h-screen bg-transparent text-white selection:bg-white selection:text-black">
       <Navbar />
 
       {/* Hero Section */}
