@@ -219,18 +219,17 @@ export default function ExplodedHotspotViewer() {
       </div>
 
       {/* Main Exploded Visualizer Canvas Container */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#070709] p-2 sm:p-6 shadow-2xl">
-        {/* Ambient glow backdrop */}
-        <div className="pointer-events-none absolute inset-0 bg-radial-at-c from-accent-primary/10 via-transparent to-transparent opacity-40 blur-2xl" />
+      <div className="glass-card p-2 sm:p-6 shadow-2xl">
+        {/* Subtle grid backdrop */}
         <div className="bg-grid pointer-events-none absolute inset-0 opacity-20" />
 
         {/* Header HUD */}
-        <div className="relative z-10 mb-2 flex items-center justify-between px-2 text-[11px] uppercase tracking-widest text-white/40">
+        <div className="relative z-10 mb-2 flex items-center justify-between px-2 text-[11px] uppercase tracking-widest text-[#8a8a8a]">
           <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-accent-secondary" />
-            <span>Aura One Architecture Map</span>
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-white" />
+            <span className="text-white">Aura One Architecture Map</span>
           </div>
-          <span className="font-mono text-accent-secondary/70">10-Stage Precision Exploded Assembly</span>
+          <span className="font-mono text-[#8a8a8a]">10-Stage Precision Exploded Assembly</span>
         </div>
 
         {/* Exploded Diagram View with Interactive Hotspots */}
@@ -264,15 +263,15 @@ export default function ExplodedHotspotViewer() {
               >
                 {/* Outer animated pulse ring when selected */}
                 {isSelected && (
-                  <span className="absolute -inset-3 animate-ping rounded-full bg-accent-secondary/30" />
+                  <span className="absolute -inset-3 animate-ping rounded-full bg-white/30" />
                 )}
 
                 {/* Hotspot node button */}
                 <div
                   className={`relative flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border transition-all ${
                     isSelected
-                      ? "border-accent-secondary bg-accent-secondary text-black shadow-[0_0_20px_rgba(0,214,255,0.8)] scale-110"
-                      : "border-white/40 bg-black/70 text-white hover:border-accent-secondary hover:bg-black/90 hover:scale-105"
+                      ? "border-white bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.8)] scale-110"
+                      : "border-white/40 bg-black/80 text-white hover:border-white hover:bg-black hover:scale-105"
                   }`}
                 >
                   <span className="text-[10px] sm:text-xs font-bold leading-none">
@@ -282,10 +281,10 @@ export default function ExplodedHotspotViewer() {
 
                 {/* Label pill on hover / active */}
                 <div
-                  className={`pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border px-2.5 py-1 text-[10px] font-medium tracking-tight backdrop-blur-md transition-all ${
+                  className={`pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-none border px-2.5 py-1 text-[10px] font-medium tracking-tight backdrop-blur-md transition-all ${
                     isSelected
-                      ? "border-accent-secondary/40 bg-black/80 text-accent-secondary shadow-lg opacity-100"
-                      : "border-white/10 bg-black/70 text-white/70 opacity-0 group-hover:opacity-100"
+                      ? "border-white/40 bg-black/90 text-white shadow-lg opacity-100"
+                      : "border-white/10 bg-black/70 text-[#8a8a8a] opacity-0 group-hover:opacity-100"
                   }`}
                 >
                   {comp.short}
@@ -301,14 +300,14 @@ export default function ExplodedHotspotViewer() {
             <button
               key={comp.id}
               onClick={() => setSelectedId(comp.id)}
-              className={`flex-shrink-0 rounded-lg px-3 py-2 text-left text-xs transition-all ${
+              className={`flex-shrink-0 rounded-none px-3 py-2 text-left text-xs transition-all ${
                 selectedId === comp.id
-                  ? "bg-white/10 text-white border border-accent-secondary/50 shadow-[0_0_10px_rgba(0,214,255,0.15)]"
-                  : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/5"
+                  ? "bg-white text-black border border-white font-semibold"
+                  : "bg-white/5 text-[#8a8a8a] hover:bg-white/10 hover:text-white border border-white/10"
               }`}
             >
-              <div className="font-semibold text-white/90">{comp.short}</div>
-              <div className="text-[10px] text-accent-secondary/80">{comp.category}</div>
+              <div className="font-semibold">{comp.short}</div>
+              <div className="text-[10px] opacity-75">{comp.category}</div>
             </button>
           ))}
         </div>
@@ -322,18 +321,15 @@ export default function ExplodedHotspotViewer() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -15 }}
           transition={{ duration: 0.25 }}
-          className="relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-[#0e0e12] to-[#070709] p-6 md:p-8 shadow-2xl"
+          className="glass-card mt-6 p-6 md:p-8"
         >
-          {/* Subtle accent glow */}
-          <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-accent-primary/20 blur-3xl" />
-
           <div className="relative z-10 grid gap-6 md:grid-cols-12 md:items-start">
             <div className="md:col-span-7 space-y-4">
               <div className="flex flex-wrap items-center gap-2.5">
-                <span className="rounded-full bg-accent-primary/20 border border-accent-secondary/30 px-3 py-0.5 text-xs font-semibold text-accent-secondary">
+                <span className="rounded-none bg-white/10 border border-white/20 px-3 py-0.5 text-xs font-semibold text-white">
                   {selectedComponent.category}
                 </span>
-                <span className="text-xs text-white/40 font-mono">
+                <span className="text-xs text-[#8a8a8a] font-mono">
                   ASSEMBLY REF #{selectedComponent.id.toUpperCase()}
                 </span>
               </div>
@@ -342,20 +338,20 @@ export default function ExplodedHotspotViewer() {
                 <h3 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                   {selectedComponent.name}
                 </h3>
-                <p className="mt-1 text-sm font-medium text-accent-secondary/90">
+                <p className="mt-1 text-sm font-medium text-white/90">
                   {selectedComponent.role}
                 </p>
               </div>
 
-              <p className="text-sm leading-relaxed text-white/70">
+              <p className="text-sm leading-relaxed text-[#8a8a8a]">
                 {selectedComponent.description}
               </p>
 
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-                <h4 className="text-xs uppercase tracking-wider text-accent-secondary font-semibold">
+              <div className="rounded-none border border-white/20 bg-white/[0.03] p-4">
+                <h4 className="text-xs uppercase tracking-wider text-white font-semibold">
                   Acoustic & Mechanical Impact
                 </h4>
-                <p className="mt-1.5 text-xs sm:text-sm text-white/80 leading-relaxed">
+                <p className="mt-1.5 text-xs sm:text-sm text-white/90 leading-relaxed">
                   {selectedComponent.acousticBenefit}
                 </p>
               </div>
@@ -363,7 +359,7 @@ export default function ExplodedHotspotViewer() {
 
             <div className="md:col-span-5 space-y-4 border-t border-white/10 pt-4 md:border-l md:border-t-0 md:pl-6 md:pt-0">
               <div className="space-y-1">
-                <div className="text-[11px] uppercase tracking-wider text-white/40 font-semibold">
+                <div className="text-[11px] uppercase tracking-wider text-[#8a8a8a] font-semibold">
                   Material Composition
                 </div>
                 <div className="text-sm font-medium text-white/90">
@@ -372,26 +368,26 @@ export default function ExplodedHotspotViewer() {
               </div>
 
               <div className="space-y-1">
-                <div className="text-[11px] uppercase tracking-wider text-white/40 font-semibold">
+                <div className="text-[11px] uppercase tracking-wider text-[#8a8a8a] font-semibold">
                   Technical Specifications
                 </div>
-                <div className="text-sm font-mono text-accent-secondary">
+                <div className="text-sm font-mono text-white">
                   {selectedComponent.specs}
                 </div>
               </div>
 
               <div className="pt-2">
-                <div className="flex items-center justify-between text-xs text-white/50 border-b border-white/5 pb-2">
+                <div className="flex items-center justify-between text-xs text-[#8a8a8a] border-b border-white/10 pb-2">
                   <span>Assembly Phase</span>
-                  <span className="text-white/80 font-mono">Stage {currentIndex + 1} / 10</span>
+                  <span className="text-white font-mono">Stage {currentIndex + 1} / 10</span>
                 </div>
-                <div className="flex items-center justify-between text-xs text-white/50 py-2">
+                <div className="flex items-center justify-between text-xs text-[#8a8a8a] py-2">
                   <span>Tolerance</span>
-                  <span className="text-white/80 font-mono">±0.02 mm</span>
+                  <span className="text-white font-mono">±0.02 mm</span>
                 </div>
-                <div className="flex items-center justify-between text-xs text-white/50 border-t border-white/5 pt-2">
+                <div className="flex items-center justify-between text-xs text-[#8a8a8a] border-t border-white/10 pt-2">
                   <span>Acoustic Chamber</span>
-                  <span className="text-white/80 font-mono">Hermetically Sealed</span>
+                  <span className="text-white font-mono">Hermetically Sealed</span>
                 </div>
               </div>
             </div>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Button from "@/components/Button";
 
 interface SpecItem {
   label: string;
@@ -260,24 +260,23 @@ export default function SpecsPage() {
   })).filter((cat) => cat.items.length > 0);
 
   return (
-    <main className="min-h-screen bg-bg-primary text-white">
+    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
       <Navbar />
 
       {/* Hero Header */}
       <section className="relative overflow-hidden pt-28 pb-12 md:pt-36 md:pb-20">
-        <div className="pointer-events-none absolute inset-0 bg-hero-glow opacity-75" />
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40" />
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-30" />
 
-        <div className="relative mx-auto max-w-7xl px-6 md:px-10">
+        <div className="relative mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-3xl space-y-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-accent-secondary/30 bg-accent-primary/10 px-3 py-1 text-xs font-semibold text-accent-secondary">
-                ENGINEERING DATASHEET
+              <div className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1 text-xs font-mono font-semibold uppercase tracking-widest text-[#8a8a8a]">
+                Engineering Datasheet
               </div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Technical <span className="text-headline-gradient">Specifications.</span>
+              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Technical <span className="text-[#8a8a8a]">Specifications.</span>
               </h1>
-              <p className="text-base text-white/70 sm:text-lg leading-relaxed">
+              <p className="text-base text-[#8a8a8a] sm:text-lg leading-relaxed">
                 Every millimeter, material, and acoustic parameter verified by rigorous measurement.
                 Full specifications for the XYZ Aura One portable acoustic reference.
               </p>
@@ -286,50 +285,47 @@ export default function SpecsPage() {
             {/* Controls: Unit Toggle & Print */}
             <div className="flex flex-wrap items-center gap-3">
               {/* Metric / Imperial toggle */}
-              <div className="flex items-center rounded-full border border-white/10 bg-[#0A0A0E] p-1 text-xs font-medium">
+              <div className="flex items-center border border-white/20 bg-black p-0.5 text-xs font-mono">
                 <button
                   onClick={() => setUseImperial(false)}
-                  className={`rounded-full px-3 py-1.5 transition-all ${
+                  className={`px-3 py-2 transition-all ${
                     !useImperial
-                      ? "bg-accent-primary/30 text-accent-secondary shadow-sm font-semibold"
-                      : "text-white/50 hover:text-white"
+                      ? "bg-white text-black font-bold"
+                      : "text-[#8a8a8a] hover:text-white"
                   }`}
                 >
-                  Metric (mm / g)
+                  Metric (mm/g)
                 </button>
                 <button
                   onClick={() => setUseImperial(true)}
-                  className={`rounded-full px-3 py-1.5 transition-all ${
+                  className={`px-3 py-2 transition-all ${
                     useImperial
-                      ? "bg-accent-primary/30 text-accent-secondary shadow-sm font-semibold"
-                      : "text-white/50 hover:text-white"
+                      ? "bg-white text-black font-bold"
+                      : "text-[#8a8a8a] hover:text-white"
                   }`}
                 >
-                  Imperial (in / oz)
+                  Imperial (in/oz)
                 </button>
               </div>
 
               <button
                 onClick={() => window.print()}
-                className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                className="btn-secondary px-4 py-2 text-xs font-mono"
                 title="Print or Save PDF"
               >
-                <span>🖨️</span>
-                <span>Print Spec Sheet</span>
+                Print Spec Sheet
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Blueprint Hero Visual: Exploded View Reference */}
+      {/* Blueprint Visual Reference */}
       <section className="relative pb-16">
-        <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#08080B] p-6 shadow-2xl">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-4 text-xs text-white/50">
-              <span className="font-mono text-accent-secondary">
-                FIGURE 1.0 — EXPLODED KINEMATIC COMPONENT SCHEMATIC
-              </span>
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
+          <div className="glass-card p-6">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-4 text-xs font-mono text-[#8a8a8a]">
+              <span>FIGURE 1.0 — EXPLODED KINEMATIC COMPONENT SCHEMATIC</span>
               <span>SCALE: 1:1 CALIBRATED • 10 PRECISION MODULES</span>
             </div>
 
@@ -342,38 +338,25 @@ export default function SpecsPage() {
                 priority
               />
             </div>
-
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-4 text-xs text-white/60">
-              <p>
-                Labeled components mapped directly to acoustic chassis, electronics, dual passive radiators, and high-capacity battery.
-              </p>
-              <Link
-                href="/technology"
-                className="text-accent-secondary hover:underline flex items-center gap-1 font-semibold"
-              >
-                Inspect interactive 3D component HUD →
-              </Link>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Filter / Search Bar */}
+      {/* Specifications Search Filter */}
       <section className="relative pb-8">
-        <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
-            <span className="text-white/40">🔍</span>
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16">
+          <div className="relative max-w-md">
             <input
               type="text"
-              placeholder="Search specifications (e.g., 'battery', 'frequency', 'radiator', 'weight', 'LDAC')..."
+              placeholder="Search specifications (e.g. 38 Hz, battery, LDAC)..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-transparent text-sm text-white placeholder-white/40 focus:outline-none"
+              className="w-full bg-[#0a0a0a] border border-white/20 px-4 py-3 text-sm text-white placeholder-[#8a8a8a] focus:border-white focus:outline-none rounded-none"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm("")}
-                className="text-xs text-white/50 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-[#8a8a8a] hover:text-white"
               >
                 Clear
               </button>
@@ -382,186 +365,72 @@ export default function SpecsPage() {
         </div>
       </section>
 
-      {/* Categorized Specifications */}
+      {/* Specification Categories Data List */}
       <section className="relative pb-24">
-        <div className="mx-auto max-w-7xl px-6 md:px-10 space-y-12">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16 space-y-10">
           {filteredCategories.map((category) => (
-            <div
-              key={category.title}
-              className="overflow-hidden rounded-2xl border border-white/10 bg-[#07070A] shadow-xl"
-            >
-              {/* Category Header */}
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-white/[0.02] px-6 py-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xl">{category.icon}</span>
-                  <h2 className="text-lg font-bold text-white tracking-tight sm:text-xl">
+            <div key={category.title} className="glass-card p-6 md:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/15 pb-4 mb-6">
+                <div>
+                  <span className="font-mono text-xs uppercase tracking-wider text-[#8a8a8a]">
+                    {category.badge}
+                  </span>
+                  <h2 className="text-xl font-bold text-white mt-1">
                     {category.title}
                   </h2>
                 </div>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-mono text-accent-secondary">
-                  {category.badge}
+                <span className="text-xs font-mono text-[#8a8a8a]">
+                  {category.items.length} Parameters
                 </span>
               </div>
 
-              {/* Specs Table List */}
-              <div className="divide-y divide-white/5">
-                {category.items.map((item, idx) => (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+                {category.items.map((item) => (
                   <div
-                    key={idx}
-                    className="grid gap-2 px-6 py-4 sm:grid-cols-12 sm:items-start transition-colors hover:bg-white/[0.015]"
+                    key={item.label}
+                    className="border-b border-white/10 pb-4 last:border-b-0 space-y-1"
                   >
-                    <div className="sm:col-span-4">
-                      <div className="text-xs font-semibold uppercase tracking-wider text-white/50">
-                        {item.label}
-                      </div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-[#8a8a8a]">
+                      {item.label}
                     </div>
-
-                    <div className="sm:col-span-8 space-y-1">
-                      <div className="text-sm font-medium text-white/95">
-                        {useImperial ? item.imperial : item.metric}
-                      </div>
-                      {item.detail && (
-                        <p className="text-xs text-white/50 leading-relaxed">
-                          {item.detail}
-                        </p>
-                      )}
+                    <div className="text-sm font-medium text-white font-mono">
+                      {useImperial ? item.imperial : item.metric}
                     </div>
+                    {item.detail && (
+                      <p className="text-xs text-[#8a8a8a] leading-relaxed">
+                        {item.detail}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           ))}
 
-          {/* In The Box Visual Showcase */}
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-[#0e0e12] to-[#070709] p-8 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-2">What&apos;s Included In The Box</h3>
-            <p className="text-xs text-white/60 mb-6">
-              Every XYZ Aura One comes complete with high-grade studio-grade accessories in 100% plastic-free unbleached packaging.
-            </p>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-center">
-                <div className="text-3xl mb-2">🔊</div>
-                <h4 className="text-sm font-semibold text-white">XYZ Aura One</h4>
-                <p className="text-[11px] text-white/50 mt-1">
-                  Selected finish (Obsidian / Sandstone / Deep Forest)
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-center">
-                <div className="text-3xl mb-2">🔌</div>
-                <h4 className="text-sm font-semibold text-white">Braided USB-C Cable</h4>
-                <p className="text-[11px] text-white/50 mt-1">
-                  1.2m reinforced fast-charge &amp; digital audio cable
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-center">
-                <div className="text-3xl mb-2">🎒</div>
-                <h4 className="text-sm font-semibold text-white">Travel Sleeve</h4>
-                <p className="text-[11px] text-white/50 mt-1">
-                  Microfiber padded protective travel pouch
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-center">
-                <div className="text-3xl mb-2">📄</div>
-                <h4 className="text-sm font-semibold text-white">Manual &amp; 2Y Warranty</h4>
-                <p className="text-[11px] text-white/50 mt-1">
-                  Quick start manual &amp; international warranty card
-                </p>
-              </div>
+          {filteredCategories.length === 0 && (
+            <div className="glass-card p-12 text-center text-[#8a8a8a]">
+              No specifications match &quot;{searchTerm}&quot;. Try searching for &quot;battery&quot;, &quot;spl&quot;, or &quot;neodymium&quot;.
             </div>
-          </div>
-
-          {/* Speaker Comparison Matrix */}
-          <div className="rounded-2xl border border-white/10 bg-[#07070A] p-6 md:p-8 shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-2">
-              Acoustic Comparison: Aura One vs Standard Portable Speakers
-            </h3>
-            <p className="text-xs text-white/60 mb-6">
-              How the 10-stage exploded architecture outperforms conventional single-radiator enclosures.
-            </p>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-white/10 text-white/40 uppercase tracking-wider">
-                    <th className="py-3 px-4">Feature</th>
-                    <th className="py-3 px-4 text-accent-secondary font-bold">XYZ Aura One</th>
-                    <th className="py-3 px-4 text-white/60">Conventional Portable Speaker</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5 text-white/80">
-                  <tr>
-                    <td className="py-3 px-4 font-semibold">Low-End Bass Extension</td>
-                    <td className="py-3 px-4 text-accent-secondary font-semibold font-mono">38 Hz (±3 dB)</td>
-                    <td className="py-3 px-4 text-white/50 font-mono">65 Hz – 75 Hz</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 font-semibold">Kinetic Vibration / Desk Walk</td>
-                    <td className="py-3 px-4 text-accent-secondary font-semibold">
-                      Zero (Dual Force-Canceling)
-                    </td>
-                    <td className="py-3 px-4 text-white/50">Severe vibration on hard surfaces</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 font-semibold">Amplification Engine</td>
-                    <td className="py-3 px-4 text-accent-secondary font-semibold">
-                      45W RMS Dual Class-D Bi-Amp
-                    </td>
-                    <td className="py-3 px-4 text-white/50">15W – 20W Single-Rail Amp</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 font-semibold">Lossless Wireless Codecs</td>
-                    <td className="py-3 px-4 text-accent-secondary font-semibold">
-                      LDAC (990 kbps) + aptX Adaptive
-                    </td>
-                    <td className="py-3 px-4 text-white/50">SBC / AAC Only (~256 kbps)</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 font-semibold">Fast Charging Speed</td>
-                    <td className="py-3 px-4 text-accent-secondary font-semibold">
-                      80% in 42 minutes (USB-PD)
-                    </td>
-                    <td className="py-3 px-4 text-white/50">3.5 – 4.5 hours (5V/1A)</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 px-4 font-semibold">Environmental Protection</td>
-                    <td className="py-3 px-4 text-accent-secondary font-semibold">
-                      IP67 (Submersible 1m)
-                    </td>
-                    <td className="py-3 px-4 text-white/50">IPX4 (Splash-proof only)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* Pre-order banner */}
-      <section className="relative border-t border-white/10 bg-gradient-to-b from-[#08080C] to-[#050507] py-20 text-center">
-        <div className="mx-auto max-w-3xl px-6">
-          <h3 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Order the XYZ Aura One
-          </h3>
-          <p className="mt-3 text-sm text-white/60">
-            Pre-order today for $299. Includes 2-year warranty and free expedited worldwide shipping.
+      {/* CTA Footer Section */}
+      <section className="relative border-t border-white/20 bg-[#0a0a0a] py-20 text-center">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Experience the benchmark in portable sound.
+          </h2>
+          <p className="mt-3 text-sm text-[#8a8a8a] max-w-lg mx-auto">
+            Order your XYZ Aura One with priority dispatch, worldwide shipping, and risk-free trial.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/order"
-              className="rounded-full bg-cta-gradient px-8 py-3 text-sm font-semibold text-white shadow-[0_0_24px_rgba(0,214,255,0.3)] transition-all hover:scale-[1.03]"
-            >
-              Pre-order Now — $299
-            </Link>
-            <Link
-              href="/technology"
-              className="rounded-full border border-white/20 bg-white/5 px-8 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
-            >
-              Explore Internal Technology
-            </Link>
+            <Button href="/order" variant="primary" size="lg">
+              Pre-order Aura One — $299
+            </Button>
+            <Button href="/technology" variant="secondary" size="lg">
+              Explore Internal Architecture
+            </Button>
           </div>
         </div>
       </section>
