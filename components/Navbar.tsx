@@ -97,15 +97,13 @@ export default function Navbar() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className={`group relative py-1 text-sm tracking-wide transition-colors duration-200 ${
-                      isActive ? "text-white font-medium" : "text-[#8a8a8a] hover:text-white"
-                    }`}
+                    className={`group relative py-1 text-sm tracking-wide transition-colors duration-200 ${isActive ? "text-white font-medium" : "text-[#8a8a8a] hover:text-white"
+                      }`}
                   >
                     <span>{item.label}</span>
                     <span
-                      className={`absolute bottom-0 left-0 h-[1px] bg-white transition-all duration-300 ${
-                        isActive ? "w-full" : "w-0 group-hover:w-full"
-                      }`}
+                      className={`absolute bottom-0 left-0 h-[1px] bg-white transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
+                        }`}
                     />
                   </Link>
                 </li>
