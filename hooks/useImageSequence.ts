@@ -5,8 +5,10 @@ import { useEffect, useRef, useState } from "react";
 interface UseImageSequenceResult {
   /** Loaded (or in-flight) HTMLImageElement objects, indexed 0..totalFrames-1 */
   frames: HTMLImageElement[];
-  /** True once every frame has either loaded or failed */
+  /** True once at least the first frame is ready to render (canvas can display and scrub immediately) */
   isLoaded: boolean;
+  /** True once all frames have settled */
+  isFullyLoaded: boolean;
   /** 0..1 preload progress, for the loading bar */
   loadProgress: number;
   /** True if the sequence is unusable (folder empty / every frame failed) — triggers the SVG fallback */
@@ -14,8 +16,11 @@ interface UseImageSequenceResult {
 }
 
 /**
- * Preloads a zero-padded frame sequence (e.g. frame_0001.jpg ... frame_0120.jpg)
+ * Preloads a zero-padded frame sequence (e.g. frame_0001.jpg ... frame_0300.jpg)
  * into memory so canvas scrubbing never stalls on a network fetch mid-scroll.
+ *
+ * Provides progressive readiness: as soon as frame 1 arrives, `isLoaded` becomes true
+ * so the initial hero speaker is visible instantly without blocking on all 300 frames.
  *
  * @param totalFrames total number of frames in the sequence
  * @param path folder containing the frames, e.g. "/sequence"
@@ -31,6 +36,7 @@ export function useImageSequence(
   extension = "jpg"
 ): UseImageSequenceResult {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isFullyLoaded, setIsFullyLoaded] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
   const [hasFailed, setHasFailed] = useState(false);
   const framesRef = useRef<HTMLImageElement[]>([]);
@@ -43,37 +49,53 @@ export function useImageSequence(
     if (totalFrames <= 0) {
       setHasFailed(true);
       setIsLoaded(true);
+      setIsFullyLoaded(true);
       return;
     }
 
     const images: HTMLImageElement[] = new Array(totalFrames);
+    framesRef.current = images;
 
     const onSettle = () => {
       if (cancelled) return;
       const settled = loadedCount + failedCount;
       setLoadProgress(settled / totalFrames);
       if (settled === totalFrames) {
-        framesRef.current = images;
-        // If every single frame failed (e.g. the folder is genuinely empty),
-        // fall back to the SVG exploded diagram instead of a blank canvas.
+        setIsFullyLoaded(true);
+        // If every single frame failed, trigger fallback
         setHasFailed(failedCount === totalFrames);
-        setIsLoaded(true);
       }
     };
 
     for (let i = 0; i < totalFrames; i++) {
       const frameNumber = String(i + 1).padStart(padLength, "0");
       const img = new Image();
-      img.src = `${path}/${prefix}${frameNumber}.${extension}`;
+
       img.onload = () => {
         loadedCount += 1;
+        // Make canvas playable as soon as the first frame arrives
+        if (i === 0 && !cancelled) {
+          setIsLoaded(true);
+        }
         onSettle();
       };
+
       img.onerror = () => {
         failedCount += 1;
+        if (i === 0 && !cancelled) {
+          setIsLoaded(true);
+        }
         onSettle();
       };
+
+      // Set src after onload/onerror handlers to avoid missing cached events
+      img.src = `${path}/${prefix}${frameNumber}.${extension}`;
       images[i] = img;
+
+      // Handle images that might already be complete from browser memory cache
+      if (img.complete && img.naturalWidth > 0 && i === 0 && !cancelled) {
+        setIsLoaded(true);
+      }
     }
 
     return () => {
@@ -84,6 +106,7 @@ export function useImageSequence(
   return {
     frames: framesRef.current,
     isLoaded,
+    isFullyLoaded,
     loadProgress,
     hasFailed,
   };

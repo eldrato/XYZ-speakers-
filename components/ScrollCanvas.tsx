@@ -20,13 +20,36 @@ export default function ScrollCanvas({ scrollYProgress }: ScrollCanvasProps) {
     SEQUENCE_PATH
   );
 
-  // Map 0-1 scroll progress across the pinned section to a frame index.
-  // Rounded so we only ever draw on an actual index change (no wasted redraws).
+  // Map 0-1 scroll progress across the pinned section to a frame index (0..299).
   const frameIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL_FRAMES - 1]);
 
   const drawFrame = (index: number) => {
     const canvas = canvasRef.current;
-    if (!canvas || !frames[index]) return;
+    if (!canvas || !frames || frames.length === 0) return;
+
+    // Pick target frame, or smoothly fallback to the nearest available loaded frame
+    let img = frames[index];
+    if (!img || !img.complete || img.naturalWidth === 0) {
+      let fallbackImg: HTMLImageElement | null = null;
+      // Search backwards first
+      for (let i = index - 1; i >= 0; i--) {
+        if (frames[i]?.complete && frames[i].naturalWidth > 0) {
+          fallbackImg = frames[i];
+          break;
+        }
+      }
+      // Search forwards if no previous frame is loaded
+      if (!fallbackImg) {
+        for (let i = index + 1; i < frames.length; i++) {
+          if (frames[i]?.complete && frames[i].naturalWidth > 0) {
+            fallbackImg = frames[i];
+            break;
+          }
+        }
+      }
+      if (!fallbackImg) return;
+      img = fallbackImg;
+    }
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -43,7 +66,6 @@ export default function ScrollCanvas({ scrollYProgress }: ScrollCanvasProps) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, displayWidth, displayHeight);
 
-    const img = frames[index];
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const canvasRatio = displayWidth / displayHeight;
 
@@ -64,19 +86,20 @@ export default function ScrollCanvas({ scrollYProgress }: ScrollCanvasProps) {
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   };
 
-  // Redraw on scroll-driven frame changes, guarded against duplicate indices.
+  // Redraw on scroll-driven frame changes
   useMotionValueEvent(frameIndex, "change", (latest) => {
-    if (!isLoaded || hasFailed) return;
+    if (hasFailed) return;
     const rounded = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.round(latest)));
     if (rounded === lastDrawnIndex.current) return;
     lastDrawnIndex.current = rounded;
     requestAnimationFrame(() => drawFrame(rounded));
   });
 
-  // Draw the first frame once loading completes, and on resize.
+  // Draw the initial frame once frame 0 is loaded, and on resize
   useEffect(() => {
-    if (!isLoaded || hasFailed) return;
-    drawFrame(lastDrawnIndex.current === -1 ? 0 : lastDrawnIndex.current);
+    if (hasFailed) return;
+    const idx = lastDrawnIndex.current === -1 ? 0 : lastDrawnIndex.current;
+    drawFrame(idx);
 
     const handleResize = () => {
       drawFrame(lastDrawnIndex.current === -1 ? 0 : lastDrawnIndex.current);
@@ -87,30 +110,31 @@ export default function ScrollCanvas({ scrollYProgress }: ScrollCanvasProps) {
   }, [isLoaded, hasFailed]);
 
   return (
-    <div className="relative h-full w-full bg-bg-primary">
-      {!isLoaded && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-black">
-          <div className="h-px w-40 overflow-hidden bg-white/20">
+    <div className="relative h-full w-full bg-black">
+      {hasFailed ? (
+        <ExplodedFallback scrollYProgress={scrollYProgress} />
+      ) : (
+        <canvas
+          ref={canvasRef}
+          className="will-change-transform h-full w-full [transform:translateZ(0)]"
+          style={{ display: "block" }}
+        />
+      )}
+
+      {/* Subtle loader only while the very first frame is loading */}
+      {!isLoaded && !hasFailed && (
+        <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-black">
+          <div className="h-0.5 w-36 overflow-hidden rounded-full bg-white/20">
             <div
               className="h-full bg-white transition-[width] duration-150 ease-out"
-              style={{ width: `${Math.round(loadProgress * 100)}%` }}
+              style={{ width: `${Math.max(8, Math.round(loadProgress * 100))}%` }}
             />
           </div>
-          <p className="text-xs font-mono tracking-wide text-[#8a8a8a]">
-            Loading {Math.round(loadProgress * 100)}%
+          <p className="text-[10px] font-mono tracking-widest text-[#8a8a8a] uppercase">
+            Loading Acoustic Core {Math.round(loadProgress * 100)}%
           </p>
         </div>
       )}
-
-      {isLoaded && hasFailed && (
-        <ExplodedFallback scrollYProgress={scrollYProgress} />
-      )}
-
-      <canvas
-        ref={canvasRef}
-        className="will-change-transform h-full w-full [transform:translateZ(0)]"
-        style={{ display: isLoaded && !hasFailed ? "block" : "none" }}
-      />
     </div>
   );
 }

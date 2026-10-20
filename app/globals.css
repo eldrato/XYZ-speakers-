@@ -23,8 +23,12 @@ body {
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--font-inter), Inter, "Open Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  overflow-x: hidden;
 }
+
+body {
+  overflow-x: clip;
+}
+
 
 * {
   scrollbar-width: thin;
